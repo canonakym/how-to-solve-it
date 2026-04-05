@@ -2,6 +2,14 @@
 title: "How to Solve It"
 ---
 
+# How to Solve It
+
+## Data Analysis
+
+- [Overview](how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.qmd)
+- [Session 0](how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.qmd)
+- [Session 1](how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.qmd)
+
 ## About
 
 **How to Solve It** は、生命科学研究における  
