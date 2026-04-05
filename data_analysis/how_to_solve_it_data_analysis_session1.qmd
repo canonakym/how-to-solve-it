@@ -19,7 +19,7 @@ editor: source
 
 ### RStudioの画面
 
-![](source_image/RStudio_screen.png){fig-align="center" width="80%"}
+![](images/source/RStudio_screen.png){fig-align="center" width="80%"}
 
 基本的にスクリプトウィンドウで作業します。他の画面は確認に使用することが多く、実際に書き込むことはあまりありません。
 
@@ -29,7 +29,7 @@ editor: source
 - ここでソースコードを書いたスクリプトファイル (file.R) を保存することで、何度でも解析を実行することができる。
 - ソースコードは`Tools → Global Options → Appearance`を設定することで、見た目をわかりやすく表示できるようになる。
 
-![](source_image/Appearance.png){fig-align="center" width="60%"}
+![](images/source/Appearance.png){fig-align="center" width="60%"}
 
 ::: {.callout-tip}
 #### 演習1.1
@@ -233,7 +233,6 @@ library(tidyverse) # インストール済パッケージの読み込み
 #| lst-cap: "データフレームの生成"
 #| echo: true
 #| message: false
-#| results: 'hide'
 
 library(tidyverse) # パッケージの読み込み
 
@@ -248,14 +247,32 @@ df <- tibble(
 df
 ```
 
-@lst-read-data2 を実行してください。tibbleは表作成の関数です。実行するとgenotypeとmotilityという二つの列にそれぞれ指定した値が入った表が作成されたと思います。エクセルの各列に数字を書き込むのと変わりありません。
+@lst-read-data2 を実行してください。tibbleは表作成の関数です。実行すると上のようにgenotypeとmotilityという二つの列にそれぞれ指定した値が入った表が作成されたと思います。`tibble()`の構文はエクセルの各列に数字を書き込むのと変わりありません。
+
+生成された表をよくみてみましょう。ID、genotype、motilityの三つの列ができましたね？このような表を**データフレーム**と呼びます。データフレームはRで最もよく使われるデータ構造の一つで、行と列からなる表形式のデータを格納するためのオブジェクトです。データフレームは、異なる型のデータを同時に格納できるため、非常に柔軟なデータ構造です。
+
+`tidyverse`に属す関数で読み込むとデータ型(data type)を自動で判断してくれるというメリットもあります。データ型というのは、データがどのような種類であるかを示すものです。例えば、上のコードでIDは数値型、genotypeは文字列型、motilityは数値型と自動で判断されていることがわかります。データフレームを作成する際に、列ごとに異なるデータ型を指定することもできますが、`tidyverse`の関数を使用すると、データ型の自動判断が行われるため、手動で指定する必要がなくなります。
+
+データ型は、データ解析において非常に重要です。特に量的データか質的データかの区別は、どんな統計を適用できるかと言う判断に大きく影響します。`tidyverse`をお勧めするのはこの判断が楽に行えるからです。
 
 :::{.callout-tip}
 下の表を作ってみよう。
 
 ```{r}
+#| lst-label: lst-read-data2
+#| lst-cap: "データフレームの生成"
+#| echo: false 
 
+library(tibble)
 
+tibble(
+  ID = seq(1, 5, 1),
+  location = c("Ueda", "Nagano", "Matsumoto", "Ueda", "Tomi"),
+  num_species = c(118, 150, 90, 81, 221)
+)
+```
+:::
 
-<!-- オブジェクトにはクラスが存在し、"numeric（数値型）"、"character（文字列型）"など多数存在する。クラスは基本的には自動で判断されるが、指定することも可能。 -->
+データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。
+
 

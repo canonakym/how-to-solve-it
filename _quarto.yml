@@ -11,18 +11,18 @@ website:
         text: Home
       - text: Data Analysis
         menu:
-          - href: how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.qmd
+          - href: data_analysis/index.qmd
             text: Overview
-          - href: how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.qmd
+          - href: data_analysis/session0.qmd
             text: Session 0
-          - href: how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.qmd
+          - href: data_analysis/session1.qmd
             text: Session 1
 
 format:
   html:
     toc: true
     css: styles.css
-    
+
 crossref:
   lst-title: "コード"
   lst-prefix: "コード"

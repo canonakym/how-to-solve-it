@@ -1,105 +1,77 @@
 [
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session1.html",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session1.html",
     "title": "How to Solve It: Data Analysis",
     "section": "",
     "text": "CSVデータを読み込む\nデモデータを記述統計で確認する\nデモデータをグラフで可視化する"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#session-1のゴール",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#session-1のゴール",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session1.html#session-1のゴール",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session1.html#session-1のゴール",
     "title": "How to Solve It: Data Analysis",
     "section": "",
     "text": "CSVデータを読み込む\nデモデータを記述統計で確認する\nデモデータをグラフで可視化する"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#rとrstudio",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#rとrstudio",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session1.html#rとrstudio",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session1.html#rとrstudio",
     "title": "How to Solve It: Data Analysis",
     "section": "RとRStudio",
     "text": "RとRStudio\n\nR：データ解析に特化したプログラミング言語の一つ\nRStudio：Rに特化した統合開発環境（integrated development environment; IDE）\n\n\nRStudioの画面\n\n\n\n\n\n基本的にスクリプトウィンドウで作業します。他の画面は確認に使用することが多く、実際に書き込むことはあまりありません。\n\n\nスクリプトウィンドウ（左上）\n\nスクリプトファイルでソースコードを書く場所。\nここでソースコードを書いたスクリプトファイル (file.R) を保存することで、何度でも解析を実行することができる。\nソースコードはTools → Global Options → Appearanceを設定することで、見た目をわかりやすく表示できるようになる。\n\n\n\n\n\n\n\n\n\n\n\n\nTip演習1.1\n\n\n\nRの見た目を自分の好きなものに変更してみよう。\n\n\n\n\nコンソールウィンドウ（左下）\n\n実行結果の表示\n直接コンソールにソースコードを書くことも可能\nTerminalタブに切り替えることでターミナル操作も可能\n\n\n\nEnvironmentビュー（右上）\n\nオブジェクトやデータの格納\nImport DatasetからGUIでのデータ読み込みができる。Import Datasetからの読み込みはSet working directoryの設定を省略できるので便利。\n使用メモリの確認\nHistoryタブから実行コードの確認ができる\nGit管理もここから見れる。バージョン管理までできる人は要チェック\n\n\n\n汎用ビュー（右下）\n\nFiles: ディレクトリ構成の確認\nPlots: 実行したplotが表示される\nPackages: インストール済みのパッケージの確認とCRANからのインストールができる"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#コードの実行",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#コードの実行",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session1.html#コードの実行",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session1.html#コードの実行",
     "title": "How to Solve It: Data Analysis",
     "section": "コードの実行",
     "text": "コードの実行\nコードの実行方法は２つあります。\n\nコンソールでコードを書いて実行\nスクリプトウィンドウでスクリプトを書いて実行\n\n\nコンソールでのコード実行\n\n\n\n\nコード 1: 計算機 1\n\n\n1 + 1\n\n\n\n\nまずは コード 1 をコンソールで直接実行してみましょう。コピペはダメです。 計算できましたか？では次に基本の四則計算をやってみましょう。\n\n\n\n\nコード 2: 計算機 2\n\n\n5 + 6\n18 - 5\n3 * 18\n10 / 3\n10 %/% 3\n10 %% 3\n\n\n\n\nコード 2 を実行してください。どうでしょうか？割り算は表記法で結果が変わります。基本の計算は解析でもよく使うので（正規化が代表的です）Rでの書き方を知っておきましょう。\n\n\nスクリプトの実行\nでは先ほどのコードをスクリプトに書いてみましょう。スクリプトはメニューバーからFile → New File → R script、または⇧⌘NまたはRStudioウィンドウの上部にある白い紙に＋マークのアイコンから開くことができます。\n\n\n\n\nコード 3: 計算機 3\n\n\n5 + 6   　# 足し算\n18 - 5　　# 引き算\n3 * 18  　# 掛け算\n10 / 3　　# 割り算\n10 %/% 3　# 割り算（整数のみ返す）\n10 %% 3　 # 割り算（商の余りを返す）\n\n\n\n\nUntitledというファイルがスクリプトウィンドウで開いたら、コード 3 を書いてみてください。\nでは実行してみましょう。実行はスクリプトウィンドウのツールバーのRunアイコンからもできますが、実行したい行にカーソルを置いて⌘Enterの方が気軽です。複数行を一気に実行したいときは複数行選択した状態で⌘Enterで実行できます。\nどうでしょうか？コンソールで実行したときと同じ結果が得られたと思います。また、今回手本コード(@calc-basic3)に書いてある# コメントの内容は表示だけされて実行結果には影響を与えなかったはずです。Rに限らずプログラム言語にはコメントアウト機能が備わっています。そのとき何を考えてそのコードを書いたのか、意外と忘れます。コメントと一緒にスクリプトを書くことでコードの再現性がより高くなります。こまめにコメントアウトをする癖をつけましょう。コメントアウトは#を書いてから書き込む方法と選択行を一気にコメントアウトする⌘⇧Cのどちらかでできます。\n\n\n\n\n\n\nTip演習1.2\n\n\n\n四則計算以外の複雑な計算もやってみよう。下のコードがうまく動いたら、loge20 + sin(3π/2) を計算してみましょう。答えは1.995732になるはずです。\n\nsin(pi / 2)                    # sin(π/2)\n\ncos(pi)                        # cos(π)\n\nlog(exp(3))                    # log(e^3) (log(): baseを指定しなければ自然対数)\n\nlog(100, base = 10)            # log10(100)\n\nsqrt(3^2 + 4^2)                # √(3^2 + 4^2)\n\nsin(pi / 4)^2 + cos(pi / 4)^2  # sin^2(π/4) + cos^2(π/4)\n\n\n\n答えを見る\n\n\n\n[1] 1\n\n\n[1] -1\n\n\n[1] 3\n\n\n[1] 2\n\n\n[1] 5\n\n\n[1] 1"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#データの読み込みから学ぶオブジェクト指向",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session1.html#データの読み込みから学ぶオブジェクト指向",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session1.html#データの読み込みから学ぶオブジェクト指向",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session1.html#データの読み込みから学ぶオブジェクト指向",
     "title": "How to Solve It: Data Analysis",
     "section": "データの読み込みから学ぶオブジェクト指向",
-    "text": "データの読み込みから学ぶオブジェクト指向\n\nオブジェクト指向\nそろそろRStudioの画面にも慣れてきたでしょうか？ではデータの読み込みをやってみましょう！\nデータ読み込みの前に知っておくべき知識があります。オブジェクト指向です。\n\nオブジェクト指向(Object-Oriented Programming, OOP)\nオブジェクト： Rの環境に記憶させた「何か」\nベクトル、行列、データフレーム全てがオブジェクトとしてRの環境に記憶され、各オブジェクトには固有の名前が存在する。\n\n\n\n\n\nコード 4: OOP 1\n\n\nc(3, 4, 7, 10, 30) # c() = ベクトル（値を並べたもの）\nmean(3, 4, 7, 10, 30)\nsd(3, 4, 7, 10, 30)\n\n\n\n\nでは、オブジェクトに何かを格納してみましょう。まずは コード 4 を実行してください。（ここからは全てスクリプトで作業しましょう！） 同じデータを何回も書いています。面倒この上ないし、いつかデータを開き間違えることでしょう。では次にオブジェクトを使って同じことをします。\n\n\n\n\nコード 5: OOP 2\n\n\ndata1 &lt;- c(3, 4, 7, 10, 30)\ndata1\n\nmean(data1)\nsd(data1)\n\n\n\n\nコード 5 を実行してみましょう。 コード 4 と同じ結果なのに書く労力が段違いですね！これがオブジェクト指向の考え方です。\nこのようにオブジェクト名 &lt;- 何かという動作を「オブジェクトに「何か」を格納する」と言います。今回の例だとnumberというオブジェクトにベクトルでデータを格納したということになります。オブジェクトに格納すると、 コード 5 のようにオブジェクト名だけで実行すると、中身を表示させることができます。\nまた、今回平均値を計算するmean()と不偏標準偏差を計算するsd()の二つの関数を使いました。 コード 4 のようにデータそのものを渡すこともできますが、オブジェクトを渡す方が楽かつ今後データが変わった時に1行しか書き換えなくて済むと言う利点があります。\n\n\nデータの読み込みとtidyverseパッケージ\nではデータを読み込む前に、データ解析の強力な味方である「tidyverseパッケージ」をインストールしましょう。\nRはプログラミング言語であり、基本的な機能は備わっていますが、実際のデータ解析ではさまざまな追加機能を使うことが一般的です。この追加機能のまとまりを「パッケージ」と呼びます。イメージはRがSwitchの本体、パッケージがMonster Hunter riseソフト、関数がハンターのアクションやモンスターの動きという感じです。\n中でもtidyverseは、データの読み込み・加工・可視化を一貫して行うためのパッケージ群です。tidyverseパッケージの中にさらにtibble、ggplot2、readrなどのパッケージが格納されています。\n\ninstall.packages(\"tidyverse\") # パッケージのインストール（初回のみ）\nlibrary(tidyverse) # インストール済パッケージの読み込み\n\nインストールできたでしょうか？library()はRを開くたびに実行してください。インストールはソフトの購入、library()はソフトの起動にあたります。購入は（普通は）一回でいいですが、起動はゲームを始めるたびに必要ですね？Rも同じくです。\nでは、tidyverseのtibbleパッケージのtibble関数を使って簡単なデータを作り、オブジェクト指向の素晴らしさを実感してみましょう。\n\n\n\n\nコード 6: データフレームの生成\n\n\nlibrary(tidyverse) # パッケージの読み込み\n\n# データを作る\n## tibble(列名A = ベクトルA, 列名B = ベクトルB)\ndf &lt;- tibble(\n  ID       = c(1, 2, 3, 4, 5, 6),\n  genotype = c(\"WT\", \"WT\", \"WT\", \"KO\", \"KO\", \"KO\"),\n  motility = c(85, 90, 90, 50, 95, 90)\n)\n\ndf\n\n\n\n\nコード 6 を実行してください。tibbleは表作成の関数です。実行するとgenotypeとmotilityという二つの列にそれぞれ指定した値が入った表が作成されたと思います。エクセルの各列に数字を書き込むのと変わりありません。\n\n\n\n\n\n\nTip\n\n\n\n下の表を作ってみよう。"
+    "text": "データの読み込みから学ぶオブジェクト指向\n\nオブジェクト指向\nそろそろRStudioの画面にも慣れてきたでしょうか？ではデータの読み込みをやってみましょう！\nデータ読み込みの前に知っておくべき知識があります。オブジェクト指向です。\n\nオブジェクト指向(Object-Oriented Programming, OOP)\nオブジェクト： Rの環境に記憶させた「何か」\nベクトル、行列、データフレーム全てがオブジェクトとしてRの環境に記憶され、各オブジェクトには固有の名前が存在する。\n\n\n\n\n\nコード 4: OOP 1\n\n\nc(3, 4, 7, 10, 30) # c() = ベクトル（値を並べたもの）\nmean(3, 4, 7, 10, 30)\nsd(3, 4, 7, 10, 30)\n\n\n\n\nでは、オブジェクトに何かを格納してみましょう。まずは コード 4 を実行してください。（ここからは全てスクリプトで作業しましょう！） 同じデータを何回も書いています。面倒この上ないし、いつかデータを開き間違えることでしょう。では次にオブジェクトを使って同じことをします。\n\n\n\n\nコード 5: OOP 2\n\n\ndata1 &lt;- c(3, 4, 7, 10, 30)\ndata1\n\nmean(data1)\nsd(data1)\n\n\n\n\nコード 5 を実行してみましょう。 コード 4 と同じ結果なのに書く労力が段違いですね！これがオブジェクト指向の考え方です。\nこのようにオブジェクト名 &lt;- 何かという動作を「オブジェクトに「何か」を格納する」と言います。今回の例だとnumberというオブジェクトにベクトルでデータを格納したということになります。オブジェクトに格納すると、 コード 5 のようにオブジェクト名だけで実行すると、中身を表示させることができます。\nまた、今回平均値を計算するmean()と不偏標準偏差を計算するsd()の二つの関数を使いました。 コード 4 のようにデータそのものを渡すこともできますが、オブジェクトを渡す方が楽かつ今後データが変わった時に1行しか書き換えなくて済むと言う利点があります。\n\n\nデータの読み込みとtidyverseパッケージ\nではデータを読み込む前に、データ解析の強力な味方である「tidyverseパッケージ」をインストールしましょう。\nRはプログラミング言語であり、基本的な機能は備わっていますが、実際のデータ解析ではさまざまな追加機能を使うことが一般的です。この追加機能のまとまりを「パッケージ」と呼びます。イメージはRがSwitchの本体、パッケージがMonster Hunter riseソフト、関数がハンターのアクションやモンスターの動きという感じです。\n中でもtidyverseは、データの読み込み・加工・可視化を一貫して行うためのパッケージ群です。tidyverseパッケージの中にさらにtibble、ggplot2、readrなどのパッケージが格納されています。\n\ninstall.packages(\"tidyverse\") # パッケージのインストール（初回のみ）\nlibrary(tidyverse) # インストール済パッケージの読み込み\n\nインストールできたでしょうか？library()はRを開くたびに実行してください。インストールはソフトの購入、library()はソフトの起動にあたります。購入は（普通は）一回でいいですが、起動はゲームを始めるたびに必要ですね？Rも同じくです。\nでは、tidyverseのtibbleパッケージのtibble関数を使って簡単なデータを作り、オブジェクト指向の素晴らしさを実感してみましょう。\n\n\n\n\nコード 6: データフレームの生成\n\n\nlibrary(tidyverse) # パッケージの読み込み\n\n# データを作る\n## tibble(列名A = ベクトルA, 列名B = ベクトルB)\ndf &lt;- tibble(\n  ID       = c(1, 2, 3, 4, 5, 6),\n  genotype = c(\"WT\", \"WT\", \"WT\", \"KO\", \"KO\", \"KO\"),\n  motility = c(85, 90, 90, 50, 95, 90)\n)\n\ndf\n\n\n\n\n# A tibble: 6 × 3\n     ID genotype motility\n  &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;\n1     1 WT             85\n2     2 WT             90\n3     3 WT             90\n4     4 KO             50\n5     5 KO             95\n6     6 KO             90\n\n\nコード 6 を実行してください。tibbleは表作成の関数です。実行すると上のようにgenotypeとmotilityという二つの列にそれぞれ指定した値が入った表が作成されたと思います。tibble()の構文はエクセルの各列に数字を書き込むのと変わりありません。\n生成された表をよくみてみましょう。ID、genotype、motilityの三つの列ができましたね？このような表をデータフレームと呼びます。データフレームはRで最もよく使われるデータ構造の一つで、行と列からなる表形式のデータを格納するためのオブジェクトです。データフレームは、異なる型のデータを同時に格納できるため、非常に柔軟なデータ構造です。\ntidyverseに属す関数で読み込むとデータ型(data type)を自動で判断してくれるというメリットもあります。データ型というのは、データがどのような種類であるかを示すものです。例えば、上のコードでIDは数値型、genotypeは文字列型、motilityは数値型と自動で判断されていることがわかります。データフレームを作成する際に、列ごとに異なるデータ型を指定することもできますが、tidyverseの関数を使用すると、データ型の自動判断が行われるため、手動で指定する必要がなくなります。\nデータ型は、データ解析において非常に重要です。特に量的データか質的データかの区別は、どんな統計を適用できるかと言う判断に大きく影響します。tidyverseをお勧めするのはこの判断が楽に行えるからです。\n\n\n\n\n\n\nTip\n\n\n\n下の表を作ってみよう。\n\n\n# A tibble: 5 × 3\n     ID location  num_species\n  &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;\n1     1 Ueda              118\n2     2 Nagano            150\n3     3 Matsumoto          90\n4     4 Ueda               81\n5     5 Tomi              221\n\n\n\n\nデータフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "How to Solve It",
-    "section": "",
-    "text": "Overview\nSession 0\nSession 1"
-  },
-  {
-    "objectID": "index.html#data-analysis",
-    "href": "index.html#data-analysis",
-    "title": "How to Solve It",
-    "section": "",
-    "text": "Overview\nSession 0\nSession 1"
-  },
-  {
-    "objectID": "index.html#about",
-    "href": "index.html#about",
-    "title": "How to Solve It",
-    "section": "About",
-    "text": "About\nHow to Solve It は、生命科学研究における\n解析・実験・思考の方法を整理するためのノートです。\n研究では日々多くのデータを扱います。しかし、\n\nデータの取り方\nデータの整理の仕方\nデータの解釈の仕方\n\nは体系的に教えられる機会があまり多くありません。\nこのサイトでは、生命科学研究を進める上で必要になる\nデータ解析や画像解析の考え方と実践をまとめています。"
-  },
-  {
-    "objectID": "index.html#contents",
-    "href": "index.html#contents",
-    "title": "How to Solve It",
-    "section": "Contents",
-    "text": "Contents\n\nData Analysis\nデータの読み込みから可視化、基本的な解析手法までを扱います。\n\nSession 0 — データ解析の意義\n\nSession 1 — Getting Started with R"
-  },
-  {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.html",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.html",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session0.html",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session0.html",
     "title": "How to Solve It: Data Analysis",
     "section": "",
     "text": "私たちが生命科学の研究を行う動機は、生命現象を理解したいという好奇心や、病気の原因や治療法を明らかにしたいという思いにあると思います。精子形成はどのような仕組みで行われるのか、なぜ不妊症が起こるのか。こうした問いに対して、私たちはさまざまな実験手法を用いて研究を行っています。\nここで、私たちが普段扱っている「データ」について少し考えてみます。\n本来私たちが知りたいのは、シャーレやフラスコの中で何が起こっているかではなく、マウスの体内で何が起こっているかということです。（もっと言えばヒトの体内で何が起こっているのかということになるかもしれません。）例えば、タンパク質Aの機能を調べたいとしたとき、その発現量や局在を実験的手法で測定し、平均値や局在解析の結果としてまとめることが多いと思います。\nしかし、この過程で私たちが扱う情報は大きく圧縮されています。\nタンパク質Aは体内でタンパク質BやC、Dなどと複雑な相互作用をしているはずです。しかし、qPCRやIBによって得られるのは、その複雑な相互作用そのものではなく、多くの場合「量」という限られた情報です。さらに複数個体で測定し、その平均値を計算すると、個体ごとの違いはさらに一つの数値へとまとめられます。\n例えば、精子運動率を調べて次のようなデータが得られたとします。このデータを平均値だけを棒グラフで見た場合と、個別データをドットプロットで見た場合で比べてみましょう。\n\n\n\n# A tibble: 6 × 2\n  genotype motility\n  &lt;fct&gt;       &lt;dbl&gt;\n1 WT             85\n2 WT             90\n3 WT             90\n4 KO             50\n5 KO             95\n6 KO             90\n\n\n\n\n\n\n\n\n\n\n\n\n平均値を計算すると、野生型マウスは約88%、KOマウスは約78%となり、棒グラフを見ると「KOマウスでは精子運動率が低下傾向にある」と解釈できるように見えます。\nしかし、ドットプロットを見るとどうでしょうか。KOマウスのデータは50, 95, 90であり、2匹は野生型とほぼ同じ値です。もし50という値が個体差や測定上の問題によるものであれば、「KOマウスでは精子運動率が低下傾向にある」と結論することは適切ではないかもしれません。\nこのように、生データの分布を見ずに平均値だけを見ると、データの解釈を誤る可能性があります。\n私たちの研究は、自然界の複雑な現象から情報を抽出し、それを整理し、理解可能な形にまとめていく作業です。その過程では必ず情報の圧縮が起こります。だからこそ、どのような情報が失われているのかを意識しながらデータを扱うことが重要になります。\n\nデータ解析を行うとき、もし適切な結論を導きたいのであれば、まずデータが適切に取得されたかを疑い、そして次にそのデータを適切に解析できているかを疑うことが不可欠です。\n\nこの How to Solve It: Data Analysis が、そうしたデータとの向き合い方を考える一助となれば幸いです。"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.html#データ解析の意義",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_session0.html#データ解析の意義",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_session0.html#データ解析の意義",
+    "href": "data_analysis/how_to_solve_it_data_analysis_session0.html#データ解析の意義",
     "title": "How to Solve It: Data Analysis",
     "section": "",
     "text": "私たちが生命科学の研究を行う動機は、生命現象を理解したいという好奇心や、病気の原因や治療法を明らかにしたいという思いにあると思います。精子形成はどのような仕組みで行われるのか、なぜ不妊症が起こるのか。こうした問いに対して、私たちはさまざまな実験手法を用いて研究を行っています。\nここで、私たちが普段扱っている「データ」について少し考えてみます。\n本来私たちが知りたいのは、シャーレやフラスコの中で何が起こっているかではなく、マウスの体内で何が起こっているかということです。（もっと言えばヒトの体内で何が起こっているのかということになるかもしれません。）例えば、タンパク質Aの機能を調べたいとしたとき、その発現量や局在を実験的手法で測定し、平均値や局在解析の結果としてまとめることが多いと思います。\nしかし、この過程で私たちが扱う情報は大きく圧縮されています。\nタンパク質Aは体内でタンパク質BやC、Dなどと複雑な相互作用をしているはずです。しかし、qPCRやIBによって得られるのは、その複雑な相互作用そのものではなく、多くの場合「量」という限られた情報です。さらに複数個体で測定し、その平均値を計算すると、個体ごとの違いはさらに一つの数値へとまとめられます。\n例えば、精子運動率を調べて次のようなデータが得られたとします。このデータを平均値だけを棒グラフで見た場合と、個別データをドットプロットで見た場合で比べてみましょう。\n\n\n\n# A tibble: 6 × 2\n  genotype motility\n  &lt;fct&gt;       &lt;dbl&gt;\n1 WT             85\n2 WT             90\n3 WT             90\n4 KO             50\n5 KO             95\n6 KO             90\n\n\n\n\n\n\n\n\n\n\n\n\n平均値を計算すると、野生型マウスは約88%、KOマウスは約78%となり、棒グラフを見ると「KOマウスでは精子運動率が低下傾向にある」と解釈できるように見えます。\nしかし、ドットプロットを見るとどうでしょうか。KOマウスのデータは50, 95, 90であり、2匹は野生型とほぼ同じ値です。もし50という値が個体差や測定上の問題によるものであれば、「KOマウスでは精子運動率が低下傾向にある」と結論することは適切ではないかもしれません。\nこのように、生データの分布を見ずに平均値だけを見ると、データの解釈を誤る可能性があります。\n私たちの研究は、自然界の複雑な現象から情報を抽出し、それを整理し、理解可能な形にまとめていく作業です。その過程では必ず情報の圧縮が起こります。だからこそ、どのような情報が失われているのかを意識しながらデータを扱うことが重要になります。\n\nデータ解析を行うとき、もし適切な結論を導きたいのであれば、まずデータが適切に取得されたかを疑い、そして次にそのデータを適切に解析できているかを疑うことが不可欠です。\n\nこの How to Solve It: Data Analysis が、そうしたデータとの向き合い方を考える一助となれば幸いです。"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_index.html",
+    "href": "data_analysis/how_to_solve_it_data_analysis_index.html",
     "title": "Data Analysis",
     "section": "",
     "text": "このセクションでは、生命科学研究におけるデータ解析の基本を扱います。\n主に R を用いて、\n\nデータの読み込み\nデータの整理\nデータの可視化\n基本的な統計解析\n\nを段階的に学びます。"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#overview",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#overview",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_index.html#overview",
+    "href": "data_analysis/how_to_solve_it_data_analysis_index.html#overview",
     "title": "Data Analysis",
     "section": "",
     "text": "このセクションでは、生命科学研究におけるデータ解析の基本を扱います。\n主に R を用いて、\n\nデータの読み込み\nデータの整理\nデータの可視化\n基本的な統計解析\n\nを段階的に学びます。"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#sessions",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#sessions",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_index.html#sessions",
+    "href": "data_analysis/how_to_solve_it_data_analysis_index.html#sessions",
     "title": "Data Analysis",
     "section": "Sessions",
     "text": "Sessions\n\nSession 0 — Data Analysis\nデータ解析を行う前に、「データとは何か」「どのように解釈すべきか」を考えます。\n\n\n\nSession 1 — Getting Started with R\nR と RStudio の基本操作を学び、CSV データの読み込みと簡単な可視化を行います。"
   },
   {
-    "objectID": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#prerequisites",
-    "href": "how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.html#prerequisites",
+    "objectID": "data_analysis/how_to_solve_it_data_analysis_index.html#prerequisites",
+    "href": "data_analysis/how_to_solve_it_data_analysis_index.html#prerequisites",
     "title": "Data Analysis",
     "section": "Prerequisites",
     "text": "Prerequisites\n特別なプログラミング経験は必要ありません。\n\nR version: 4.5.1\nRStudio\n\nがインストールされていれば、この内容を進めることができます。"
