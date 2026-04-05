@@ -75,5 +75,33 @@
     "title": "Data Analysis",
     "section": "Prerequisites",
     "text": "Prerequisites\n特別なプログラミング経験は必要ありません。\n\nR version: 4.5.1\nRStudio\n\nがインストールされていれば、この内容を進めることができます。"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "How to Solve It",
+    "section": "",
+    "text": "Overview\nSession 0\nSession 1"
+  },
+  {
+    "objectID": "index.html#data-analysis",
+    "href": "index.html#data-analysis",
+    "title": "How to Solve It",
+    "section": "",
+    "text": "Overview\nSession 0\nSession 1"
+  },
+  {
+    "objectID": "index.html#about",
+    "href": "index.html#about",
+    "title": "How to Solve It",
+    "section": "About",
+    "text": "About\nHow to Solve It は、生命科学研究における\n解析・実験・思考の方法を整理するためのノートです。\n研究では日々多くのデータを扱います。しかし、\n\nデータの取り方\nデータの整理の仕方\nデータの解釈の仕方\n\nは体系的に教えられる機会があまり多くありません。\nこのサイトでは、生命科学研究を進める上で必要になる\nデータ解析や画像解析の考え方と実践をまとめています。"
+  },
+  {
+    "objectID": "index.html#contents",
+    "href": "index.html#contents",
+    "title": "How to Solve It",
+    "section": "Contents",
+    "text": "Contents\n\nData Analysis\nデータの読み込みから可視化、基本的な解析手法までを扱います。\n\nSession 0 — データ解析の意義\n\nSession 1 — Getting Started with R"
   }
 ]
