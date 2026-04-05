@@ -2,8 +2,6 @@
 title: "How to Solve It"
 ---
 
-# How to Solve It
-
 ## Data Analysis
 
 - [Overview](how_to_solve_it_data_analysis/qmd_script/how_to_solve_it_data_analysis_index.qmd)
