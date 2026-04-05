@@ -1,0 +1,112 @@
+---
+title: "How to Solve It: Data Analysis"
+subtitle: "Session 0: Data Analysis"
+format: html
+toc: true
+editor: source
+css: styles.css
+---
+
+## データ解析の意義
+
+私たちが生命科学の研究を行う動機は、生命現象を理解したいという好奇心や、病気の原因や治療法を明らかにしたいという思いにあると思います。精子形成はどのような仕組みで行われるのか、なぜ不妊症が起こるのか。こうした問いに対して、私たちはさまざまな実験手法を用いて研究を行っています。
+
+ここで、私たちが普段扱っている**「データ」**について少し考えてみます。
+
+本来私たちが知りたいのは、シャーレやフラスコの中で何が起こっているかではなく、マウスの体内で何が起こっているかということです。（もっと言えばヒトの体内で何が起こっているのかということになるかもしれません。）例えば、タンパク質Aの機能を調べたいとしたとき、その発現量や局在を実験的手法で測定し、平均値や局在解析の結果としてまとめることが多いと思います。
+
+**しかし、この過程で私たちが扱う情報は大きく圧縮されています。**
+
+タンパク質Aは体内でタンパク質BやC、Dなどと複雑な相互作用をしているはずです。しかし、qPCRやIBによって得られるのは、その複雑な相互作用そのものではなく、多くの場合「量」という限られた情報です。さらに複数個体で測定し、その平均値を計算すると、個体ごとの違いはさらに一つの数値へとまとめられます。
+
+例えば、精子運動率を調べて次のようなデータが得られたとします。このデータを平均値だけを棒グラフで見た場合と、個別データをドットプロットで見た場合で比べてみましょう。
+
+:::{.center}
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-align: center
+
+library(tidyverse)
+
+tibble(
+  genotype = factor(c("WT", "WT", "WT", "KO", "KO", "KO"),
+                    levels = c("WT", "KO")),
+  motility = c(85, 90, 90, 50, 95, 90)
+)
+```
+:::
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-width: 6
+#| fig-height: 3
+#| fig-align: center
+
+library(tidyverse)
+library(patchwork)
+
+df <- tibble(
+  genotype = factor(c("WT", "WT", "WT", "KO", "KO", "KO"),
+                    levels = c("WT", "KO")),
+  motility = c(85, 90, 90, 50, 95, 90)
+)
+
+df_summary <- df %>%
+  group_by(genotype) %>%
+  summarise(
+    mean_motility = mean(motility),
+    sd_motility = sd(motility)
+  )
+
+p1 <- ggplot(df_summary, aes(x = genotype, y = mean_motility, fill = genotype)) +
+  geom_col(width = 0.6) +
+  scale_fill_manual(values = c("WT" = "#2E86C1", "KO" = "tomato")) +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 25)) +
+  geom_errorbar(
+    aes(
+      ymin = mean_motility - sd_motility,
+      ymax = mean_motility + sd_motility
+    ),
+    width = 0.2
+  ) +
+  labs(
+    x = "Genotype",
+    y = "Motility (%)"
+  ) + 
+  theme_classic() +
+  theme(legend.position = "none")
+
+p2 <- ggplot(df, aes(x = genotype, y = motility, colour = genotype)) +
+  geom_jitter(width = 0.08, size = 3) +
+  stat_summary(fun = mean, geom = "crossbar", width = 0.5, colour = "black") +
+  scale_color_manual(values = c("WT" = "#2E86C1", "KO" = "tomato")) +
+  scale_y_continuous(limits = c(0, 110), breaks = seq(0, 100, 25)) +
+  labs(
+    x = "Genotype",
+    y = "Motility (%)"
+  ) + 
+  theme_classic() +
+  theme(legend.position = "none")
+
+p1 | p2
+```
+
+平均値を計算すると、野生型マウスは約88%、KOマウスは約78%となり、棒グラフを見ると「KOマウスでは精子運動率が低下傾向にある」と解釈できるように見えます。
+
+しかし、ドットプロットを見るとどうでしょうか。KOマウスのデータは50, 95, 90であり、2匹は野生型とほぼ同じ値です。もし50という値が個体差や測定上の問題によるものであれば、「KOマウスでは精子運動率が低下傾向にある」と結論することは適切ではないかもしれません。
+
+このように、生データの分布を見ずに平均値だけを見ると、データの解釈を誤る可能性があります。
+
+私たちの研究は、自然界の複雑な現象から情報を抽出し、それを整理し、理解可能な形にまとめていく作業です。その過程では必ず情報の圧縮が起こります。だからこそ、どのような情報が失われているのかを意識しながらデータを扱うことが重要になります。
+
+:::{.key-message}
+データ解析を行うとき、もし適切な結論を導きたいのであれば、まずデータが適切に取得されたかを疑い、そして次にそのデータを適切に解析できているかを疑うことが不可欠です。
+:::
+
+この **How to Solve It: Data Analysis** が、そうした**データとの向き合い方**を考える一助となれば幸いです。
+
+
