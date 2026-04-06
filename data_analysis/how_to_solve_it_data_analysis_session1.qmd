@@ -275,7 +275,7 @@ tibble(
 
 データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。デモデータを用意したのでしたからダウンロードしてください。DesktopにR_course/inputsというフォルダを作り、その中にダウンロードしたデータを入れましょう。
 
-[デモデータをダウンロード](demo_dataset/demo_dataset/code_csvdata_readr.csv)
+[デモデータをダウンロード](demo_analysis/demo_dataset/code_csvdata_readr.csv)
 
 :::{.callout-tip}
 パス（フォルダやファイルの場所）の書き方
