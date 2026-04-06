@@ -273,6 +273,60 @@ tibble(
 ```
 :::
 
-データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。
+データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。デモデータを用意したのでしたからダウンロードしてください。DesktopにR_course/inputsというフォルダを作り、その中にダウンロードしたデータを入れましょう。
 
+[デモデータをダウンロード](demo_dataset/demo_dataset/code_csvdata_readr.csv)
+
+:::{.callout-tip}
+パス（フォルダやファイルの場所）の書き方
+
+`Desktop/R_course/inputs/code_csvdata_readr.csv`
+
+という風に書くとDesktopにあるR_courseというフォルダの中のinputsフォルダにあるcode_csvdata_readr.csvファイルを示すことになります。フォルダの中にさらにフォルダがある場合、`/`でつなぎます。ファイル名を指定する場合は拡張子まで書かないとエラーになります。
+:::
+
+```{r}
+#| lst-label: lst-read-data3
+#| lst-cap: "CSVファイルからのデータ読み込み"
+#| echo: true
+#| eval: false
+#| message: false 
+
+library(readr)
+
+# データの読み込み dfはオブジェクト名、read_csv("ファイルパス")
+df <- read_csv("demo_dataset/code_csvdata_readr.csv")
+
+# データの簡単な確認 glimpse(オブジェクト名)
+glimpse(df)
+
+```
+
+次に上のコードを実行してください。パスは自身のパスに置き換えましょう。File viewでデータのあるフォルダを開き、`⚙️ More → Copy Folder Path to Clipboard`でパスのコピーもできます。`glimpse()`を使いましたが、データの確認はいろいろな関数があります。先ほど使った`tibble(df)`でも確認ができるでしょう。`head(df)`もよく使います。それぞれ実行してみてください。
+
+read_csv()はreadrパッケージの関数でcsvをデータフレームとして読み込んでくれます。他にもread_tsv()などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みはreadrパッケージでは不可能です。readxlパッケージが必要になります。ただシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してcsvを扱います。
+
+## 記述統計と可視化
+では、早速読み込んだデータの記述統計をやってみましょう。まずは、代表的な量的データ、平均値、中央値、最小値、最大値、四分位数を計算してみましょう。
+
+```{r}
+#| lst-label: lst-descriptive1
+#| lst-cap: "記述統計 1"
+#| echo: true
+#| eval: false
+
+library(readr)
+
+# データの読み込み
+df <- read_csv("demo_dataset/code_csvdata_readr.csv")
+
+# データの中身をよく確認する
+# どんな列があるか
+names(df)
+
+# どんなマウスがいるかとどんな遺伝子型があるかを確認したい
+df %>% count(group, genotype_label)
+
+summary(df)
+```
 

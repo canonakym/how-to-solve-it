@@ -185,6 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#オブジェクト指向" id="toc-オブジェクト指向" class="nav-link" data-scroll-target="#オブジェクト指向">オブジェクト指向</a></li>
   <li><a href="#データの読み込みとtidyverseパッケージ" id="toc-データの読み込みとtidyverseパッケージ" class="nav-link" data-scroll-target="#データの読み込みとtidyverseパッケージ">データの読み込みとtidyverseパッケージ</a></li>
   </ul></li>
+  <li><a href="#記述統計と可視化" id="toc-記述統計と可視化" class="nav-link" data-scroll-target="#記述統計と可視化">記述統計と可視化</a></li>
   </ul>
 </nav>
     </div>
@@ -523,10 +524,74 @@ Tip
 </div>
 </div>
 </div>
-<p>データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。</p>
-
-
+<p>データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。デモデータを用意したのでしたからダウンロードしてください。DesktopにR_course/inputsというフォルダを作り、その中にダウンロードしたデータを入れましょう。</p>
+<p><a href="demo_dataset/demo_dataset/code_csvdata_readr.csv">デモデータをダウンロード</a></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>パス（フォルダやファイルの場所）の書き方</p>
+<p><code>Desktop/R_course/inputs/code_csvdata_readr.csv</code></p>
+<p>という風に書くとDesktopにあるR_courseというフォルダの中のinputsフォルダにあるcode_csvdata_readr.csvファイルを示すことになります。フォルダの中にさらにフォルダがある場合、<code>/</code>でつなぎます。ファイル名を指定する場合は拡張子まで書かないとエラーになります。</p>
+</div>
+</div>
+<div class="cell">
+<div id="lst-read-data3" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-read-data3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+コード&nbsp;7: CSVファイルからのデータ読み込み
+</figcaption>
+<div aria-describedby="lst-read-data3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込み dfはオブジェクト名、read_csv("ファイルパス")</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"demo_dataset/code_csvdata_readr.csv"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># データの簡単な確認 glimpse(オブジェクト名)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</div>
+<p>次に上のコードを実行してください。パスは自身のパスに置き換えましょう。File viewでデータのあるフォルダを開き、<code>⚙️ More → Copy Folder Path to Clipboard</code>でパスのコピーもできます。<code>glimpse()</code>を使いましたが、データの確認はいろいろな関数があります。先ほど使った<code>tibble(df)</code>でも確認ができるでしょう。<code>head(df)</code>もよく使います。それぞれ実行してみてください。</p>
+<p>read_csv()はreadrパッケージの関数でcsvをデータフレームとして読み込んでくれます。他にもread_tsv()などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みはreadrパッケージでは不可能です。readxlパッケージが必要になります。ただシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してcsvを扱います。</p>
 </section>
+</section>
+<section id="記述統計と可視化" class="level2">
+<h2 class="anchored" data-anchor-id="記述統計と可視化">記述統計と可視化</h2>
+<p>では、早速読み込んだデータの記述統計をやってみましょう。まずは、代表的な量的データ、平均値、中央値、最小値、最大値、四分位数を計算してみましょう。</p>
+<div class="cell">
+<div id="lst-descriptive1" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-descriptive1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+コード&nbsp;8: 記述統計 1
+</figcaption>
+<div aria-describedby="lst-descriptive1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># データの読み込み</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"demo_dataset/code_csvdata_readr.csv"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># データの中身をよく確認する</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># どんな列があるか</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># どんなマウスがいるかとどんな遺伝子型があるかを確認したい</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">count</span>(group, genotype_label)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->
