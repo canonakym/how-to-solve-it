@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  resources: 
+    - data_analysis/demo_dataset/*.csv
 
 website:
   title: "How to Solve It"
