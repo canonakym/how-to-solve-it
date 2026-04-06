@@ -256,6 +256,7 @@ df
 データ型は、データ解析において非常に重要です。特に量的データか質的データかの区別は、どんな統計を適用できるかと言う判断に大きく影響します。`tidyverse`をお勧めするのはこの判断が楽に行えるからです。
 
 :::{.callout-tip}
+### 演習1.3
 下の表を作ってみよう。
 
 ```{r}
@@ -306,7 +307,7 @@ glimpse(df)
 
 read_csv()はreadrパッケージの関数でcsvをデータフレームとして読み込んでくれます。他にもread_tsv()などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みはreadrパッケージでは不可能です。readxlパッケージが必要になります。ただシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してcsvを扱います。
 
-## 記述統計と可視化
+## 記述統計量の計算
 では、早速読み込んだデータの記述統計をやってみましょう。まずは、代表的な量的データ、平均値、中央値、最小値、最大値、四分位数を計算してみましょう。
 
 ```{r}
@@ -324,9 +325,278 @@ df <- read_csv("demo_dataset/code_csvdata_readr.csv")
 # どんな列があるか
 names(df)
 
-# どんなマウスがいるかとどんな遺伝子型があるかを確認したい
-df %>% count(group, genotype_label)
+# どんなマウスがいるか、どんな遺伝子型があるかを確認したい
+df %>% count(public_group, genotype_label)
 
 summary(df)
 ```
 
+記述統計でよくRの教科書に登場するのは、`summary()`ですが、これは正直そのまま使えません。
+
+上の手本コードはその代表例です。`df %>% count(public_group, genotype_label)`の結果は以下のように出力されますが、この通り、このデータでは４群の比較になるはずです。summary()は全体の平均値や中央値を出すだけなので、群ごとの記述統計を出すことができません。
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+
+library(readr)
+
+# データの読み込み
+df <- read_csv("demo_dataset/code_csvdata_readr.csv")
+
+df %>% count(public_group, genotype_label)
+
+```
+
+では群ごとの記述統計を出すにはどうすればいいでしょうか？次のコードを実行してみてください。
+
+```{r}
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+
+# グループごとの平均値の計算
+df_summary <- df %>% 
+  group_by(public_group) %>%
+  summarise(
+    n = n(),
+    body_weight_g_mean = mean(body_weight_g, na.rm = TRUE),
+    testis_weight_L_mg_mean = mean(testis_weight_L_mg, na.rm = TRUE)
+  )
+
+# 表示
+df_summary
+
+```
+
+どうでしょうか？`group_by()`で指定した列の値ごとにデータをグループ化して、`summarise()`で指定した列の平均値を計算してくれました。このような層別解析を行うときに、欠かせない演算子が`%>%`です。これは**パイプ演算子**と呼ばれ、左側のオブジェクトを右側の関数の最初の引数として渡すことができます。図を参考に説明すると、dfをgroup_by()に渡して、層別化されたデータをsummarise()に渡して、平均値を計算してくれるというイメージです。パイプ演算子を使わない場合以下のようなコードになります。
+
+![](images/source/pipe.png){fig-align="center" width="80%"}
+
+```{r}
+#| echo: true
+#| eval: false
+#| message: false
+#| warning: false
+
+# グループごとの平均値の計算
+# na.rm = TRUEはNAを無視して平均値を計算するための引数
+# na.rmを指定しない場合、1行でもNAがあると計算結果がNAになる
+df_grouped <- group_by(df, public_group)
+
+df_summary <- summarise(df_grouped,
+    n = n(),
+    body_weight_g_mean = mean(body_weight_g, na.rm = TRUE),
+    testis_weight_L_mg_mean = mean(testis_weight_L_mg, na.rm = TRUE)
+  )
+
+# 表示
+df_summary
+
+```
+
+解析で使わない`df_grouped`というオブジェクトができてしまいますね？このようにパイプ演算子はよりシンプルにコードを書くことができるので、ぜひ覚えてください。
+
+:::{.callout-tip}
+### 演習1.4
+
+グループごとの中央値、最小値、最大値、四分位数も計算してみよう。`summarise()`の中に計算したい統計量を追加するだけでできる。
+
+**記述統計量　関数チートシート**
+
+| 指標 | 関数 | 説明 |
+|------|------|------|
+| サンプル数 | `n()` | データ数 |
+| 平均 | `mean(x, na.rm = TRUE)` | データの中心 |
+| 中央値 | `median(x, na.rm = TRUE)` | 真ん中の値 |
+| 最小値 | `min(x, na.rm = TRUE)` | 一番小さい値 |
+| 最大値 | `max(x, na.rm = TRUE)` | 一番大きい値 |
+| 第1四分位 | `quantile(x, 0.25, na.rm = TRUE)` | 下位25% |
+| 第3四分位 | `quantile(x, 0.75, na.rm = TRUE)` | 上位25% |
+| 標準偏差 | `sd(x, na.rm = TRUE)` | ばらつき |
+| 標準誤差 | `sd(x, na.rm = TRUE) / sqrt(n)` | 平均の誤差 |
+:::
+
+## データの可視化
+
+では、最後にデータの可視化をやってみましょう。データの可視化に特化したパッケージが`ggplot2`です。`ggplot2`は非常に強力なパッケージで、直感的に美しいグラフ作成ができます。ではまず基本のグラフを作ってみましょう。
+
+```{r}
+#| lst-label: lst-visualization1
+#| lst-cap: "データの可視化 1"
+#| echo: true
+#| eval: true
+#| message: false
+#| warning: false
+
+ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(colour = public_group), width = 0.2, alpha = 0.7) +
+  theme_classic()
+
+
+```
+
+@lst-visualization1 を実行しましょう。手本コードではすべて書いてしまっていますが、実行時、`+`の前で一つずつ実行してみましょう。グラフがどのように変化するかを確認してみてください。以下のように、グラフが段階的に完成していくはずです。ちなみに、`ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group))`の部分はグラフの土台を作る（データフレームの指定とx軸、y軸の指定）だけなので、ここの実行だけでは何も表示されません。geom系の関数を追加することで、グラフが作られます。
+
+```{r}
+#| lst-label: lst-visualization1
+#| lst-cap: "データの可視化 1"
+#| echo: false
+#| eval: true
+#| warning: false
+
+library(patchwork)
+
+p1 <- ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group)) +
+  geom_boxplot(outlier.shape = NA) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+        plot.margin = margin(b = 20)) +
+  guides(fill = "none")
+  
+p2 <- ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(colour = public_group), width = 0.2, alpha = 0.7) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+        plot.margin = margin(b = 20)) +
+  guides(fill = "none", colour = "none")
+
+p3 <- ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(colour = public_group), width = 0.2, alpha = 0.7) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1),
+        plot.margin = margin(b = 20)) +
+  guides(fill = "none")
+
+p1 <- p1 + ggtitle("1. only boxplot")
+p2 <- p2 + ggtitle("2. add jitter")
+p3 <- p3 + ggtitle("3. add theme")
+
+(p1 | p2 | p3) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+ggplot2は主に以下の３つの要素から構成されます。
+
+1. ggplot(df, aes(x = ~, y = ~, fill = ~))：グラフの土台(fillやcolourで群ごとの色分けを指定)
+1. geom系の関数：グラフの種類を指定
+1. theme系の関数：グラフの見た目を指定
+
+チートシートを用意したので、グラフの種類や見た目を変えてみましょう。
+
+:::{.callout-tip}
+### 演習1.5
+
+@lst-visualization1 で作ったグラフの種類・見た目を変えてみよう。
+
+**ggplot2の関数チートシート**
+
+| 分類 | 関数 / 要素 | 用途 |
+|------|-------------|------|
+| geom | `geom_point()` | 散布図・点を描く |
+| geom | `geom_jitter()` | 点を少しずらして重なりを見やすくする |
+| geom | `geom_line()` | 折れ線グラフを描く |
+| geom | `geom_col()` | 値の高さをそのまま棒グラフにする |
+| geom | `geom_bar()` | 件数を自動で数えて棒グラフにする |
+| geom | `geom_boxplot()` | 箱ひげ図を描く |
+| geom | `geom_violin()` | 分布の形を左右対称で描く |
+| geom | `geom_histogram()` | ヒストグラムを描く |
+| geom | `geom_density()` | 密度曲線を描く |
+| geom | `geom_errorbar()` | エラーバーを描く |
+| geom | `geom_text()` | 文字を図中に置く |
+| geom | `geom_smooth()` | 回帰線・平滑化曲線を描く |
+| theme | `theme_classic()` | 軸だけ残したシンプルなテーマ |
+| theme | `theme_bw()` | 白背景＋枠ありのテーマ |
+| theme | `theme_minimal()` | 余計な線を減らした軽いテーマ |
+| theme | `theme()` | 個別要素を細かく調整する |
+| theme要素 | `axis.text.x` | x軸ラベルの文字設定 |
+| theme要素 | `axis.text.y` | y軸ラベルの文字設定 |
+| theme要素 | `axis.title.x` | x軸タイトルの設定 |
+| theme要素 | `axis.title.y` | y軸タイトルの設定 |
+| theme要素 | `plot.title` | 図タイトルの設定 |
+| theme要素 | `legend.position` | 凡例の位置を変える |
+| theme要素 | `legend.title` | 凡例タイトルの設定 |
+| theme要素 | `legend.text` | 凡例ラベル文字の設定 |
+| theme要素 | `plot.margin` | 図全体の余白調整 |
+| theme要素 | `panel.grid.major` | 主グリッド線の設定 |
+| theme要素 | `panel.grid.minor` | 補助グリッド線の設定 |
+| theme要素 | `panel.border` | 枠線の設定 |
+| theme要素 | `strip.text` | facet見出しの設定 |
+| theme要素 | `strip.background` | facet見出し背景の設定 |
+
+* geom系の関数はそれぞれ挙動が違うので、渡すべき引数の種類を確認してから使いましょう。例えば、geom_colはy軸に統計量を渡す必要がありますが、geom_boxは個別データを渡す必要があります。
+* theme()の中で個別要素を指定する場合、`要素 = element_関数()`の形で書きます。例えば、`axis.text.x = element_text(angle = 30, hjust = 1)`はx軸のラベルを30度傾けて、右寄せにするという意味になります。
+::: 
+
+正直、これらの関数をすべて覚える必要はありません。グラフの種類や見た目を変えたいときに、チートシートをみたり、AIに聞いたりして、必要な関数を調べられればOKです。いろいろなグラフを作ってみてください。下に演習1.5の参考例を載せておきます。模写しながらggplot2の構造を理解してみてください。
+
+<details>
+<summary>演習1.5の例</summary>
+
+```{r}  
+#| echo: true
+#| eval: true
+#| warning: false
+#| message: false
+
+# violin plot
+ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group)) +
+  geom_violin(alpha = 0.6, trim = FALSE) +
+  geom_jitter(aes(colour = public_group), width = 0.15, alpha = 0.7) +
+  theme_classic()
+
+# jitter plot
+ggplot(df, aes(x = public_group, y = body_weight_g, colour = public_group)) +
+  geom_jitter(width = 0.15, size = 2.5, alpha = 0.8) +
+  theme_classic()
+
+# bar plot (mean ± standard error)
+df_summary <- df %>%
+  group_by(public_group) %>%
+  summarise(
+    n = n(),
+    mean_bw = mean(body_weight_g, na.rm = TRUE),
+    sd_bw = sd(body_weight_g, na.rm = TRUE),
+    se_bw = sd_bw / sqrt(n)
+  )
+
+ggplot(df_summary, aes(x = public_group, y = mean_bw, fill = public_group)) +
+  geom_col(width = 0.7) +
+  geom_errorbar(aes(ymin = mean_bw - se_bw, ymax = mean_bw + se_bw), width = 0.2) +
+  theme_classic()
+
+# jitter plot ＋ 平均値
+ggplot(df, aes(x = public_group, y = body_weight_g, colour = public_group)) +
+  geom_jitter(width = 0.15, alpha = 0.7) +
+  stat_summary(fun = mean, geom = "point", size = 4, colour = "black") +
+  theme_classic()
+
+# histogram
+ggplot(df, aes(x = body_weight_g, fill = public_group)) +
+  geom_histogram(bins = 10, alpha = 0.8) +
+  facet_wrap(~ public_group, scales = "free_y") +
+  theme_classic()
+
+# scatter plot
+ggplot(df, aes(x = body_weight_g, y = testis_weight_L_mg, colour = public_group)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  theme_classic()
+
+ggplot(df, aes(x = body_weight_g, y = testis_weight_L_mg)) +
+  geom_point(size = 2.5, alpha = 0.8, colour = "steelblue") +
+  geom_smooth(method = "lm", se = FALSE, colour = "black") +
+  facet_wrap(~ public_group) +
+  theme_classic()
+
+ggplot(df, aes(x = age_weeks_at_sampling, y = body_weight_g, colour = public_group)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  geom_smooth(se = FALSE) +
+  theme_classic()
+```
+
+</details>

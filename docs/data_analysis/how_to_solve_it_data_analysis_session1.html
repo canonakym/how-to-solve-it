@@ -185,7 +185,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#オブジェクト指向" id="toc-オブジェクト指向" class="nav-link" data-scroll-target="#オブジェクト指向">オブジェクト指向</a></li>
   <li><a href="#データの読み込みとtidyverseパッケージ" id="toc-データの読み込みとtidyverseパッケージ" class="nav-link" data-scroll-target="#データの読み込みとtidyverseパッケージ">データの読み込みとtidyverseパッケージ</a></li>
   </ul></li>
-  <li><a href="#記述統計と可視化" id="toc-記述統計と可視化" class="nav-link" data-scroll-target="#記述統計と可視化">記述統計と可視化</a></li>
+  <li><a href="#記述統計量の計算" id="toc-記述統計量の計算" class="nav-link" data-scroll-target="#記述統計量の計算">記述統計量の計算</a></li>
+  <li><a href="#データの可視化" id="toc-データの可視化" class="nav-link" data-scroll-target="#データの可視化">データの可視化</a></li>
   </ul>
 </nav>
     </div>
@@ -505,7 +506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Tip
+<span class="screen-reader-only">Tip</span>演習1.3
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -563,8 +564,8 @@ Tip
 <p>read_csv()はreadrパッケージの関数でcsvをデータフレームとして読み込んでくれます。他にもread_tsv()などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みはreadrパッケージでは不可能です。readxlパッケージが必要になります。ただシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してcsvを扱います。</p>
 </section>
 </section>
-<section id="記述統計と可視化" class="level2">
-<h2 class="anchored" data-anchor-id="記述統計と可視化">記述統計と可視化</h2>
+<section id="記述統計量の計算" class="level2">
+<h2 class="anchored" data-anchor-id="記述統計量の計算">記述統計量の計算</h2>
 <p>では、早速読み込んだデータの記述統計をやってみましょう。まずは、代表的な量的データ、平均値、中央値、最小値、最大値、四分位数を計算してみましょう。</p>
 <div class="cell">
 <div id="lst-descriptive1" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
@@ -582,14 +583,465 @@ Tip
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># どんな列があるか</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># どんなマウスがいるかとどんな遺伝子型があるかを確認したい</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">count</span>(group, genotype_label)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># どんなマウスがいるか、どんな遺伝子型があるかを確認したい</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">count</span>(public_group, genotype_label)</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </figure>
 </div>
 </div>
+<p>記述統計でよくRの教科書に登場するのは、<code>summary()</code>ですが、これは正直そのまま使えません。</p>
+<p>上の手本コードはその代表例です。<code>df %&gt;% count(public_group, genotype_label)</code>の結果は以下のように出力されますが、この通り、このデータでは４群の比較になるはずです。summary()は全体の平均値や中央値を出すだけなので、群ごとの記述統計を出すことができません。</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  public_group    genotype_label     n
+  &lt;chr&gt;           &lt;chr&gt;          &lt;int&gt;
+1 Control_Line_WT WT                80
+2 Gene_A_KO       KO                29
+3 Gene_B_KO       KO                 3
+4 Gene_C_KO       KO                20</code></pre>
+</div>
+</div>
+<p>では群ごとの記述統計を出すにはどうすればいいでしょうか？次のコードを実行してみてください。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># グループごとの平均値の計算</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_summary <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(public_group) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">body_weight_g_mean =</span> <span class="fu">mean</span>(body_weight_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">testis_weight_L_mg_mean =</span> <span class="fu">mean</span>(testis_weight_L_mg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 表示</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>df_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>どうでしょうか？<code>group_by()</code>で指定した列の値ごとにデータをグループ化して、<code>summarise()</code>で指定した列の平均値を計算してくれました。このような層別解析を行うときに、欠かせない演算子が<code>%&gt;%</code>です。これは<strong>パイプ演算子</strong>と呼ばれ、左側のオブジェクトを右側の関数の最初の引数として渡すことができます。図を参考に説明すると、dfをgroup_by()に渡して、層別化されたデータをsummarise()に渡して、平均値を計算してくれるというイメージです。パイプ演算子を使わない場合以下のようなコードになります。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/source/pipe.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># グループごとの平均値の計算</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># na.rm = TRUEはNAを無視して平均値を計算するための引数</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># na.rmを指定しない場合、1行でもNAがあると計算結果がNAになる</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>df_grouped <span class="ot">&lt;-</span> <span class="fu">group_by</span>(df, public_group)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df_summary <span class="ot">&lt;-</span> <span class="fu">summarise</span>(df_grouped,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">body_weight_g_mean =</span> <span class="fu">mean</span>(body_weight_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">testis_weight_L_mg_mean =</span> <span class="fu">mean</span>(testis_weight_L_mg, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 表示</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>df_summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>解析で使わない<code>df_grouped</code>というオブジェクトができてしまいますね？このようにパイプ演算子はよりシンプルにコードを書くことができるので、ぜひ覚えてください。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>演習1.4
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>グループごとの中央値、最小値、最大値、四分位数も計算してみよう。<code>summarise()</code>の中に計算したい統計量を追加するだけでできる。</p>
+<p><strong>記述統計量　関数チートシート</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>指標</th>
+<th>関数</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>サンプル数</td>
+<td><code>n()</code></td>
+<td>データ数</td>
+</tr>
+<tr class="even">
+<td>平均</td>
+<td><code>mean(x, na.rm = TRUE)</code></td>
+<td>データの中心</td>
+</tr>
+<tr class="odd">
+<td>中央値</td>
+<td><code>median(x, na.rm = TRUE)</code></td>
+<td>真ん中の値</td>
+</tr>
+<tr class="even">
+<td>最小値</td>
+<td><code>min(x, na.rm = TRUE)</code></td>
+<td>一番小さい値</td>
+</tr>
+<tr class="odd">
+<td>最大値</td>
+<td><code>max(x, na.rm = TRUE)</code></td>
+<td>一番大きい値</td>
+</tr>
+<tr class="even">
+<td>第1四分位</td>
+<td><code>quantile(x, 0.25, na.rm = TRUE)</code></td>
+<td>下位25%</td>
+</tr>
+<tr class="odd">
+<td>第3四分位</td>
+<td><code>quantile(x, 0.75, na.rm = TRUE)</code></td>
+<td>上位25%</td>
+</tr>
+<tr class="even">
+<td>標準偏差</td>
+<td><code>sd(x, na.rm = TRUE)</code></td>
+<td>ばらつき</td>
+</tr>
+<tr class="odd">
+<td>標準誤差</td>
+<td><code>sd(x, na.rm = TRUE) / sqrt(n)</code></td>
+<td>平均の誤差</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="データの可視化" class="level2">
+<h2 class="anchored" data-anchor-id="データの可視化">データの可視化</h2>
+<p>では、最後にデータの可視化をやってみましょう。データの可視化に特化したパッケージが<code>ggplot2</code>です。<code>ggplot2</code>は非常に強力なパッケージで、直感的に美しいグラフ作成ができます。ではまず基本のグラフを作ってみましょう。</p>
+<div class="cell">
+<div id="lst-visualization1" class="r cell-code listing quarto-float quarto-figure quarto-figure-left anchored">
+<figure class="quarto-float quarto-float-lst figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-lst" id="lst-visualization1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+コード&nbsp;9: データの可視化 1
+</figcaption>
+<div aria-describedby="lst-visualization1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> public_group, <span class="at">y =</span> body_weight_g, <span class="at">fill =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> public_group), <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</figure>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#lst-visualization1" class="quarto-xref">コード&nbsp;9</a> を実行しましょう。手本コードではすべて書いてしまっていますが、実行時、<code>+</code>の前で一つずつ実行してみましょう。グラフがどのように変化するかを確認してみてください。以下のように、グラフが段階的に完成していくはずです。ちなみに、<code>ggplot(df, aes(x = public_group, y = body_weight_g, fill = public_group))</code>の部分はグラフの土台を作る（データフレームの指定とx軸、y軸の指定）だけなので、ここの実行だけでは何も表示されません。geom系の関数を追加することで、グラフが作られます。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>ggplot2は主に以下の３つの要素から構成されます。</p>
+<ol type="1">
+<li>ggplot(df, aes(x = ~, y = ~))：グラフの土台</li>
+<li>geom系の関数：グラフの種類を指定</li>
+<li>theme系の関数：グラフの見た目を指定</li>
+</ol>
+<p>チートシートを用意したので、グラフの種類や見た目を変えてみましょう。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>演習1.5
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#lst-visualization1" class="quarto-xref">コード&nbsp;9</a> で作ったグラフの種類・見た目を変えてみよう。</p>
+<p><strong>ggplot2の関数チートシート</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>分類</th>
+<th>関数 / 要素</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_point()</code></td>
+<td>散布図・点を描く</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_jitter()</code></td>
+<td>点を少しずらして重なりを見やすくする</td>
+</tr>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_line()</code></td>
+<td>折れ線グラフを描く</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_col()</code></td>
+<td>値の高さをそのまま棒グラフにする</td>
+</tr>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_bar()</code></td>
+<td>件数を自動で数えて棒グラフにする</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_boxplot()</code></td>
+<td>箱ひげ図を描く</td>
+</tr>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_violin()</code></td>
+<td>分布の形を左右対称で描く</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_histogram()</code></td>
+<td>ヒストグラムを描く</td>
+</tr>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_density()</code></td>
+<td>密度曲線を描く</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_errorbar()</code></td>
+<td>エラーバーを描く</td>
+</tr>
+<tr class="odd">
+<td>geom</td>
+<td><code>geom_text()</code></td>
+<td>文字を図中に置く</td>
+</tr>
+<tr class="even">
+<td>geom</td>
+<td><code>geom_smooth()</code></td>
+<td>回帰線・平滑化曲線を描く</td>
+</tr>
+<tr class="odd">
+<td>theme</td>
+<td><code>theme_classic()</code></td>
+<td>軸だけ残したシンプルなテーマ</td>
+</tr>
+<tr class="even">
+<td>theme</td>
+<td><code>theme_bw()</code></td>
+<td>白背景＋枠ありのテーマ</td>
+</tr>
+<tr class="odd">
+<td>theme</td>
+<td><code>theme_minimal()</code></td>
+<td>余計な線を減らした軽いテーマ</td>
+</tr>
+<tr class="even">
+<td>theme</td>
+<td><code>theme()</code></td>
+<td>個別要素を細かく調整する</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>axis.text.x</code></td>
+<td>x軸ラベルの文字設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>axis.text.y</code></td>
+<td>y軸ラベルの文字設定</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>axis.title.x</code></td>
+<td>x軸タイトルの設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>axis.title.y</code></td>
+<td>y軸タイトルの設定</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>plot.title</code></td>
+<td>図タイトルの設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>legend.position</code></td>
+<td>凡例の位置を変える</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>legend.title</code></td>
+<td>凡例タイトルの設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>legend.text</code></td>
+<td>凡例ラベル文字の設定</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>plot.margin</code></td>
+<td>図全体の余白調整</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>panel.grid.major</code></td>
+<td>主グリッド線の設定</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>panel.grid.minor</code></td>
+<td>補助グリッド線の設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>panel.border</code></td>
+<td>枠線の設定</td>
+</tr>
+<tr class="odd">
+<td>theme要素</td>
+<td><code>strip.text</code></td>
+<td>facet見出しの設定</td>
+</tr>
+<tr class="even">
+<td>theme要素</td>
+<td><code>strip.background</code></td>
+<td>facet見出し背景の設定</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>geom系の関数はそれぞれ挙動が違うので、渡すべき引数の種類を確認してから使いましょう。例えば、geom_colはy軸に統計量を渡す必要がありますが、geom_boxは個別データを渡す必要があります。</li>
+<li>theme()の中で個別要素を指定する場合、<code>要素 = element_関数()</code>の形で書きます。例えば、<code>axis.text.x = element_text(angle = 30, hjust = 1)</code>はx軸のラベルを30度傾けて、右寄せにするという意味になります。</li>
+</ul>
+</div>
+</div>
+<p>正直、これらの関数をすべて覚える必要はありません。グラフの種類や見た目を変えたいときに、チートシートをみたり、AIに聞いたりして、必要な関数を調べられればOKです。いろいろなグラフを作ってみてください。</p>
+<details>
+<summary>
+演習1.5の例
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># violin plot</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> public_group, <span class="at">y =</span> body_weight_g, <span class="at">fill =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">trim =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> public_group), <span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jitter plot</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> public_group, <span class="at">y =</span> body_weight_g, <span class="at">colour =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bar plot (mean ± standard error)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>df_summary <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(public_group) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_bw =</span> <span class="fu">mean</span>(body_weight_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_bw =</span> <span class="fu">sd</span>(body_weight_g, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_bw =</span> sd_bw <span class="sc">/</span> <span class="fu">sqrt</span>(n)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_summary, <span class="fu">aes</span>(<span class="at">x =</span> public_group, <span class="at">y =</span> mean_bw, <span class="at">fill =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_bw <span class="sc">-</span> se_bw, <span class="at">ymax =</span> mean_bw <span class="sc">+</span> se_bw), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># jitter plot ＋ 平均値</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> public_group, <span class="at">y =</span> body_weight_g, <span class="at">colour =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># histogram</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> body_weight_g, <span class="at">fill =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> public_group, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># scatter plot</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> body_weight_g, <span class="at">y =</span> testis_weight_L_mg, <span class="at">colour =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> body_weight_g, <span class="at">y =</span> testis_weight_L_mg)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">colour =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> public_group) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> age_weeks_at_sampling, <span class="at">y =</span> body_weight_g, <span class="at">colour =</span> public_group)) <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="how_to_solve_it_data_analysis_session1_files/figure-html/unnamed-chunk-17-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 
 
 </section>
