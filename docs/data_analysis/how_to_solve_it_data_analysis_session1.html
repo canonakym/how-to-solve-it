@@ -182,6 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#オブジェクトとは-1" id="toc-オブジェクトとは-1" class="nav-link" data-scroll-target="#オブジェクトとは-1">オブジェクトとは</a></li>
   <li><a href="#tidyverseパッケージ" id="toc-tidyverseパッケージ" class="nav-link" data-scroll-target="#tidyverseパッケージ">tidyverseパッケージ</a></li>
+  <li><a href="#rプロジェクト.rprojの作成" id="toc-rプロジェクト.rprojの作成" class="nav-link" data-scroll-target="#rプロジェクト.rprojの作成">Rプロジェクト(.Rproj)の作成</a></li>
   <li><a href="#csvファイルの読み込み" id="toc-csvファイルの読み込み" class="nav-link" data-scroll-target="#csvファイルの読み込み">CSVファイルの読み込み</a></li>
   </ul></li>
   <li><a href="#記述統計量の計算" id="toc-記述統計量の計算" class="nav-link" data-scroll-target="#記述統計量の計算">記述統計量の計算</a></li>
@@ -215,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="session-1のゴール" class="level3 session-goal">
 <h3 class="anchored" data-anchor-id="session-1のゴール">Session 1のゴール</h3>
 <ul>
-<li>Rに慣れる</li>
+<li><strong>Rに慣れる</strong></li>
 <li>CSVデータを読み込む</li>
 <li>デモデータを記述統計で確認する</li>
 <li>デモデータをグラフで可視化する</li>
@@ -543,10 +544,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+<section id="rプロジェクト.rprojの作成" class="level3">
+<h3 class="anchored" data-anchor-id="rプロジェクト.rprojの作成">Rプロジェクト(.Rproj)の作成</h3>
+<p>では次に作業環境を整えましょう。Rでの解析を行う際には、<strong>Rプロジェクト</strong>を作成することをお勧めします。Rプロジェクトは、特定の解析に関連するファイルやデータを整理するためのフォルダ構造を提供し、作業環境を整えるための機能です。Rプロジェクトを作成することで、解析に必要なファイルやデータを一元管理できるようになります。また、Rプロジェクトは、作業ディレクトリを自動的に設定してくれるため、データの読み込みや保存の際にパスを指定する手間が省けます。</p>
+<p>Rプロジェクトを作成するには、RStudioのメニューバーから<code>File → New Project</code>を選択し、出てくるウィンドウにしたがってプロジェクトを作成してください。このsessionでは、Directory　nameを<code>R_course</code>、Create project as a subdirectory ofをDesktopに設定してプロジェクトを作成しましょう。</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/source/Rproject.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>Rプロジェクトは解析ごとやプロジェクトごとに作成しておくと便利です。私はRプロジェクトを作成するフォルダには、raw_data、inputs、outputs、scripts、docsなどのサブフォルダを作成しています。</p>
+</section>
 <section id="csvファイルの読み込み" class="level3">
 <h3 class="anchored" data-anchor-id="csvファイルの読み込み">CSVファイルの読み込み</h3>
-<p>データフレームの構造は理解できましたか？では次にCSVファイルからデータを読み込んでみましょう。デモデータを用意したのでしたからダウンロードしてください。DesktopにR_course/inputsというフォルダを作り、その中にダウンロードしたデータを入れましょう。</p>
-<p><a href="demo_dataset/code_csvdata_readr.csv">デモデータをダウンロード</a></p>
+<p>では、実際にCSVファイルからデータを読み込んでみましょう。デモデータを用意したのでダウンロードしてください。さっき作った<code>R_course/inputs</code>の中にダウンロードしたデータを入れましょう。</p>
+<div class="indent">
+<p>🔗 <a href="demo_dataset/code_csvdata_readr.csv">デモデータをダウンロード</a></p>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -557,9 +571,12 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>パス（フォルダやファイルの場所）の書き方</p>
+<p><strong>パス（フォルダやファイルの場所）の書き方</strong></p>
 <p><code>Desktop/R_course/inputs/code_csvdata_readr.csv</code></p>
 <p>という風に書くとDesktopにあるR_courseというフォルダの中のinputsフォルダにあるcode_csvdata_readr.csvファイルを示すことになります。フォルダの中にさらにフォルダがある場合、<code>/</code>でつなぎます。ファイル名を指定する場合は拡張子まで書かないとエラーになります。</p>
+<p>R_courseフォルダに<code>.Rproj</code>を作成している場合は、</p>
+<p><code>inputs/code_csvdata_readr.csv</code></p>
+<p>と指定するだけでOKです。</p>
 <p>これは経験談ですが、フォルダ名やファイル名にスペースがあると、高確率でエラーになります。スペースは視認できない上、全角だったり半角だったりすると地獄です。スペースの代わりにアンダーバー<code>_</code>を使うとよいです。</p>
 </div>
 </div>
@@ -582,7 +599,7 @@ Tip
 </div>
 </div>
 <p>次に上のコードを実行してください。パスは自身のパスに置き換えましょう。File viewでデータのあるフォルダを開き、<code>⚙️ More → Copy Folder Path to Clipboard</code>でパスのコピーもできます。<code>glimpse()</code>を使いましたが、データの確認はいろいろな関数があります。先ほど使った<code>tibble(df)</code>でも確認ができるでしょう。<code>head(df)</code>もよく使います。それぞれ実行してみてください。</p>
-<p>read_csv()はreadrパッケージの関数でcsvをデータフレームとして読み込んでくれます。他にもread_tsv()などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みはreadrパッケージでは不可能です。readxlパッケージが必要になります。ただシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してcsvを扱います。</p>
+<p><code>read_csv()</code>は<code>readrパッケージ</code>の関数でcsvをデータフレームとして読み込んでくれます。他にも<code>read_tsv()</code>などいろいろな拡張子に対応します。エクセルファイル(.xlsx)の読み込みは<code>readrパッケージ</code>では不可能です。<code>readxlパッケージ</code>が必要になります。ただ、エクセルファイルはシートの指定などが必要になる上、エラーもよく起こるので、この講座では一貫してCSVファイルを扱います。</p>
 </section>
 </section>
 <section id="記述統計量の計算" class="level2">
@@ -784,7 +801,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><a href="#lst-visualization1" class="quarto-xref">コード&nbsp;9</a> で作ったグラフの種類・見た目を変えてみよう。</p>
+<p><a href="#lst-visualization1" class="quarto-xref">コード&nbsp;9</a> で作ったグラフの種類・見た目を変えてみよう。さらに、yに与える引数を変えて、体重以外のデータもグラフにしてみよう。</p>
 <p><strong>ggplot2の関数チートシート</strong></p>
 <table class="caption-top table">
 <thead>
@@ -1063,6 +1080,9 @@ Tip
 </div>
 </div>
 </details>
+<p>これで、Rの基本的な操作、データの読み込み、記述統計量の計算、データの可視化まで一通りやりました。だいぶ R に慣れてきていたら嬉しいです。これらの処理はデータ解析で必ず必要になります。よく使う必須の関数でもあるので、デモデータを使って模写しながら、いろいろグラフを作ってみてください。</p>
+<p>次のSessionからは本格的にデータ解析をやってみましょう。</p>
+<p>お疲れさまでした。</p>
 
 
 </section>

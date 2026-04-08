@@ -21,6 +21,10 @@ table caption {
   text-align: center;
 }
 
+.indent {
+  margin-left: 1.5em;
+}
+
 .center {
   display: flex;
   justify-content: center;
