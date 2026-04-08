@@ -1,3 +1,17 @@
+body {
+  line-height: 1.9;
+  font-size: 16px;
+}
+
+p {
+  margin-bottom: 1em;
+}
+
+h1, h2, h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
 table {
   margin-left: auto;
   margin-right: auto;
@@ -16,6 +30,37 @@ table caption {
   font-size: 1.15em;
   font-weight: 500;
   border-left: 5px solid #2E86C1;
-  padding-left: 1em;
-  margin: 1.5em 0;
+  padding: 1.2em 1.2em 1.2em 1em;
+  margin: 2em 0;
+  border-radius: 6px;
+}
+
+.key-message h3 {
+margin-top: 0;
+margin-bottom: 0.8rem;
+color: #2E86C1;
+}
+
+.session-goal {
+  background: #fff7f7;
+  border-left: 6px solid #c44e52;
+  padding: 1.2rem 1.4rem;
+  margin: 2em 0 2.2em 0;
+  border-radius: 10px;
+}
+
+.session-goal h3 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #9f2f34;
+}
+
+.session-goal ul {
+  margin-bottom: 0;
+}
+
+.callout {
+  margin: 2.5em 0;
+  padding: 1.2em 1.4em;
+  border-radius: 10px;
 }
