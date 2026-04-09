@@ -13,11 +13,11 @@ website:
         text: Home
       - text: Data Analysis
         menu:
-          - href: data_analysis/index.qmd
+          - href: data_analysis/how_to_solve_it_data_analysis_index.qmd
             text: Overview
-          - href: data_analysis/session0.qmd
+          - href: data_analysis/how_to_solve_it_session0.qmd
             text: Session 0
-          - href: data_analysis/session1.qmd
+          - href: data_analysis/how_to_solve_it_session1.qmd
             text: Session 1
 
 format:
